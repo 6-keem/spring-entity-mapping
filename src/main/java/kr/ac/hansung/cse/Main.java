@@ -1,15 +1,20 @@
 package kr.ac.hansung.cse;
 
+
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import kr.ac.hansung.cse.dao.CourseDao;
 import kr.ac.hansung.cse.dao.InstructorDao;
+import kr.ac.hansung.cse.dao.StudentDao;
 import kr.ac.hansung.cse.entity.Course;
 import kr.ac.hansung.cse.entity.Instructor;
 import kr.ac.hansung.cse.entity.InstructorDetail;
+import kr.ac.hansung.cse.entity.Student;
 /*
 
 // One-to-Many Uni-directional
@@ -97,42 +102,50 @@ public class Main {
 }*/
 
 // One-To-One Unidirectional
-public class Main {
-    public static void main(String[] args) {
-        ClassPathXmlApplicationContext context =
-                new ClassPathXmlApplicationContext("applicationContext.xml");
+// public class Main {
+//
+//     public static void main(String[] args) {
+//         ClassPathXmlApplicationContext context =
+//                 new ClassPathXmlApplicationContext("applicationContext.xml");
+//
+//         InstructorDao instructorDao = context.getBean(InstructorDao.class);
+//         CourseDao courseDao = context.getBean(CourseDao.class);
+//
+//         // [1] InstructorDetail 객체 생성
+//         InstructorDetail detail =
+//                 new InstructorDetail("youtube.com/TheJavaChannel", "Coding");
+//
+//         // [2] Instructor 객체 생성 및 연관관계 설정
+//         Instructor instructor =
+//                 new Instructor("Namyun Kim", "nykim@hansung.ac.kr");
+//         instructor.setInstructorDetail(detail);  // 연관관계 설정
+//
+//         // [3] Instructor 저장 (CascadeType.ALL 덕분에 InstructorDetail도 함께 저장됨)
+//         instructorDao.save(instructor);
+//
+//         // [4] 저장된 Instructor 조회
+//         Instructor storedInstructor = instructorDao.findById(instructor.getId());
+//         System.out.println("Retrieved Instructor: " + storedInstructor.getFullName());
+//
+//         // [5] InstructorDetail 출력 (단방향 관계에서 바로 접근 가능)
+//         InstructorDetail storedDetail = storedInstructor.getInstructorDetail();
+//         System.out.println("Instructor Detail:");
+//         System.out.println("YouTube Channel: " + storedDetail.getYoutubeChannel());
+//         System.out.println("Hobby: " + storedDetail.getHobby());
+//
+//
+//         logger.trace("trace level");
+//         logger.debug("debug level");
+//         logger.info("info level");
+//         logger.warn("warn level");
+//         logger.error("error level");
+//     }
+// }
 
-        InstructorDao instructorDao = context.getBean(InstructorDao.class);
-        CourseDao courseDao = context.getBean(CourseDao.class);
-
-        // [1] InstructorDetail 객체 생성
-        InstructorDetail detail =
-                new InstructorDetail("youtube.com/TheJavaChannel", "Coding");
-
-        // [2] Instructor 객체 생성 및 연관관계 설정
-        Instructor instructor =
-                new Instructor("Namyun Kim", "nykim@hansung.ac.kr");
-        instructor.setInstructorDetail(detail);  // 연관관계 설정
-
-        // [3] Instructor 저장 (CascadeType.ALL 덕분에 InstructorDetail도 함께 저장됨)
-        instructorDao.save(instructor);
-
-        // [4] 저장된 Instructor 조회
-        Instructor storedInstructor = instructorDao.findById(instructor.getId());
-        System.out.println("Retrieved Instructor: " + storedInstructor.getFullName());
-
-        // [5] InstructorDetail 출력 (단방향 관계에서 바로 접근 가능)
-        InstructorDetail storedDetail = storedInstructor.getInstructorDetail();
-        System.out.println("Instructor Detail:");
-        System.out.println("YouTube Channel: " + storedDetail.getYoutubeChannel());
-        System.out.println("Hobby: " + storedDetail.getHobby());
-
-    }
-}
-
-/*
 // Many-to-Many Unidirectional
 public class Main {
+
+    private static final Logger logger = LoggerFactory.getLogger("kr.ac.hansung.cse.Main");
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context =
             new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -168,9 +181,9 @@ public class Main {
         // [5] 저장된 학생 및 수강 과목 조회 및 출력
         Student storedStudent = studentDao.findByIdWithCourses(student1.getId());
 
-        System.out.println(" Retrieved Student: " + storedStudent.getFullName());
+		logger.info(" Retrieved Student: {}", storedStudent.getFullName());
         storedStudent.getCourses().forEach(
-            course -> System.out.println("   ➤ Enrolled in: " + course.getTitle())
+            course -> logger.info("   ➤ Enrolled in: {}", course.getTitle())
         );
     }
-}*/
+}
